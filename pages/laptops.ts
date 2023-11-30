@@ -1,4 +1,4 @@
-import { type Page } from '@playwright/test'
+import { Locator, type Page } from '@playwright/test'
 import { Product } from '../models/product'
 
 export enum Brand {
@@ -17,21 +17,24 @@ export enum Brand {
 export class Laptops {
   private readonly page: Page
   private readonly product: Product
+  private readonly productName: Locator
+  private readonly brand: Locator
 
   constructor(page: Page, product: Product) {
     this.page = page
     this.product = product
+    this.productName = this.page.getByText(this.product.name)
+    this.brand = this.page
+      .getByRole('complementary')
+      .locator(`[name='${this.product.brand}']`)
   }
 
   private async pickBrand() {
-    await this.page
-      .getByRole('complementary')
-      .locator(`[name='${this.product.brand}']`)
-      .check()
+    await this.brand.check()
   }
 
   async chooseLaptop() {
     await this.pickBrand()
-    this.page.getByText(this.product.name).click()
+    await this.productName.click()
   }
 }
