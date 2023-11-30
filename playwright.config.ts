@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
+import dotenv from 'dotenv'
 
+dotenv.config()
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -8,7 +10,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'https://cloudtesting.contosotraders.com/',
+    baseURL: process.env.BASE_URL ?? 'Missing from environment variables',
     trace: 'on-first-retry',
   },
 
